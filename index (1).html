@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AlmacénPro — Sistema de Inventario</title>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- ══════════════════════════════
+     SIDEBAR
+══════════════════════════════ -->
+<aside class="sidebar">
+
+  <div class="sid-brand">
+    <div class="sid-logo-row">
+      <div class="sid-ico-box">🏭</div>
+      <div>
+        <div class="sid-brand-name">AlmacénPro</div>
+        <div class="sid-brand-ver">v2.0 · CPP</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sid-nav">
+    <div class="sid-sec-lbl">Menú principal</div>
+    <button class="sid-btn active" onclick="goTab('dashboard', this)">
+      <span class="ico">📊</span> Dashboard
+      <span class="dot"></span>
+    </button>
+    <button class="sid-btn" onclick="goTab('productos', this)">
+      <span class="ico">📦</span> Productos
+      <span class="dot"></span>
+    </button>
+    <button class="sid-btn" onclick="goTab('movimientos', this)">
+      <span class="ico">🔄</span> Movimientos
+      <span class="dot"></span>
+    </button>
+    <button class="sid-btn" onclick="goTab('historial', this)">
+      <span class="ico">📋</span> Historial
+      <span class="dot"></span>
+    </button>
+  </div>
+
+  <div class="sid-bottom">
+    <div class="sid-kpi">
+      <div class="sid-kpi-lbl">Productos</div>
+      <div class="sid-kpi-val" id="sk-prods">0</div>
+      <div class="sid-kpi-sub">registrados</div>
+    </div>
+    <div class="sid-kpi">
+      <div class="sid-kpi-lbl">Movimientos</div>
+      <div class="sid-kpi-val" id="sk-movs">0</div>
+      <div class="sid-kpi-sub">operaciones</div>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ══════════════════════════════
+     MAIN
+══════════════════════════════ -->
+<div class="main">
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="tb-left">
+      <div class="tb-title" id="tb-title">Dashboard</div>
+      <div class="tb-sub"   id="tb-sub">Resumen general del almacén</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-badge" id="tb-badge">0 productos</div>
+      <div class="tb-clock" id="clock">--:--:--</div>
+    </div>
+  </div>
+
+  <!-- Contenido de panels -->
+  <div class="content">
+
+    <!-- ══ DASHBOARD ══ -->
+    <div id="tab-dashboard" class="panel active">
+
+      <div class="pg-header">
+        <div>
+          <div class="pg-title">Resumen General</div>
+          <div class="pg-desc">Estado actual del inventario</div>
+        </div>
+        <button class="btn btn-p" onclick="goTab('productos', document.querySelectorAll('.sid-btn')[1])">
+          + Nuevo Producto
+        </button>
+      </div>
+
+      <div class="stat-row">
+        <div class="tile blue">
+          <div class="tile-lbl">Productos</div>
+          <div class="tile-val" id="d-prods">0</div>
+          <div class="tile-ico">📦</div>
+        </div>
+        <div class="tile green">
+          <div class="tile-lbl">Valor Inventario</div>
+          <div class="tile-val" id="d-valor">S/. 0.00</div>
+          <div class="tile-ico">💰</div>
+        </div>
+        <div class="tile amber">
+          <div class="tile-lbl">Ingresos</div>
+          <div class="tile-val" id="d-ing">0</div>
+          <div class="tile-ico">📥</div>
+        </div>
+        <div class="tile red">
+          <div class="tile-lbl">Salidas</div>
+          <div class="tile-val" id="d-sal">0</div>
+          <div class="tile-ico">📤</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-ico chi-blue">📦</div>
+          <div>
+            <div class="card-hd-title">Inventario Actual</div>
+            <div class="card-hd-sub">Estado completo de todos los productos</div>
+          </div>
+        </div>
+        <div id="dash-inv">
+          <div class="empty">
+            <div class="empty-ico">🏭</div>
+            <div class="empty-title">Sin productos aún</div>
+            <div class="empty-sub">Registra tu primer producto para comenzar</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-dashboard -->
+
+    <!-- ══ PRODUCTOS ══ -->
+    <div id="tab-productos" class="panel">
+
+      <div class="pg-header">
+        <div>
+          <div class="pg-title">Registrar Producto</div>
+          <div class="pg-desc">Agrega un nuevo producto al inventario</div>
+        </div>
+      </div>
+
+      <!-- Formulario de registro -->
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-ico chi-blue">➕</div>
+          <div>
+            <div class="card-hd-title">Datos del Producto</div>
+            <div class="card-hd-sub">Completa la información inicial</div>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <div class="field">
+            <label>Código <span class="req">*</span></label>
+            <input id="p-cod" type="text" placeholder="Ej: PROD-001" oninput="prevProd()">
+          </div>
+          <div class="field">
+            <label>Nombre <span class="req">*</span></label>
+            <input id="p-nom" type="text" placeholder="Ej: Papel Bond A4" oninput="prevProd()">
+          </div>
+          <div class="field">
+            <label>Stock Inicial</label>
+            <input id="p-stk" type="number" min="0" placeholder="0" oninput="prevProd()">
+          </div>
+          <div class="field">
+            <label>Costo Unitario Inicial (S/.)</label>
+            <input id="p-cu" type="number" min="0" step="0.01" placeholder="0.00" oninput="prevProd()">
+          </div>
+        </div>
+
+        <!-- Preview calculado -->
+        <div class="prev-box" id="pprod">
+          <div class="prev-item">
+            <div class="prev-lbl">Costo Total Inicial</div>
+            <div class="prev-val" id="pp-tot">S/. 0.00</div>
+          </div>
+          <div class="prev-sep"></div>
+          <div class="prev-item">
+            <div class="prev-lbl">Costo Promedio</div>
+            <div class="prev-val" id="pp-prom">S/. 0.00</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-p" onclick="regProd()">📦 Registrar Producto</button>
+          <button class="btn btn-g" onclick="limpProd()">Limpiar</button>
+        </div>
+      </div>
+
+      <!-- Catálogo -->
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-ico chi-green">📋</div>
+          <div>
+            <div class="card-hd-title">Catálogo</div>
+            <div class="card-hd-sub" id="cat-sub">0 productos</div>
+          </div>
+        </div>
+        <div id="catalogo">
+          <div class="empty">
+            <div class="empty-ico">📦</div>
+            <div class="empty-title">Sin productos</div>
+            <div class="empty-sub">Registra tu primer producto arriba</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-productos -->
+
+    <!-- ══ MOVIMIENTOS ══ -->
+    <div id="tab-movimientos" class="panel">
+
+      <div class="pg-header">
+        <div>
+          <div class="pg-title">Registrar Movimiento</div>
+          <div class="pg-desc">Ingreso o salida de mercadería · Método CPP</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-hd-ico chi-amber">🔄</div>
+          <div>
+            <div class="card-hd-title">Nuevo Movimiento</div>
+            <div class="card-hd-sub">Costo Promedio Ponderado (CPP)</div>
+          </div>
+        </div>
+
+        <!-- Selector de tipo -->
+        <div style="margin-bottom: 6px">
+          <label style="font-size: 12px; font-weight: 700;">Tipo de Movimiento</label>
+        </div>
+        <div class="tipo-sel">
+          <div class="tipo-opt in" id="t-in" onclick="setTipo('ingreso')">
+            <div class="to-ico">📥</div>
+            <div class="to-lbl">Ingreso</div>
+            <div class="to-sub">Recepción de mercadería</div>
+          </div>
+          <div class="tipo-opt" id="t-out" onclick="setTipo('salida')">
+            <div class="to-ico">📤</div>
+            <div class="to-lbl">Salida</div>
+            <div class="to-sub">Despacho de mercadería</div>
+          </div>
+        </div>
+
+        <!-- Selector de producto -->
+        <div class="form-grid" style="grid-template-columns: 1fr; margin-bottom: 14px">
+          <div class="field">
+            <label>Producto <span class="req">*</span></label>
+            <select id="m-prod" onchange="onProd()">
+              <option value="">— Selecciona un producto —</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Barra de estado del producto seleccionado -->
+        <div class="sib" id="sib">
+          <div class="sib-item">
+            <div class="sib-lbl">Stock Actual</div>
+            <div class="sib-val" id="sib-s">0</div>
+          </div>
+          <div class="sib-sep"></div>
+          <div class="sib-item">
+            <div class="sib-lbl">Costo Promedio</div>
+            <div class="sib-val" id="sib-p">S/. 0.00</div>
+          </div>
+          <div class="sib-sep"></div>
+          <div class="sib-item">
+            <div class="sib-lbl">Costo Total</div>
+            <div class="sib-val" id="sib-t">S/. 0.00</div>
+          </div>
+        </div>
+
+        <!-- Campos del movimiento -->
+        <div class="form-grid">
+          <div class="field">
+            <label>Cantidad <span class="req">*</span></label>
+            <input id="m-qty" type="number" min="1" placeholder="0" oninput="prevMov()">
+          </div>
+          <div class="field" id="f-cu">
+            <label>Costo Unitario (S/.) <span class="req">*</span></label>
+            <input id="m-cu" type="number" min="0" step="0.01" placeholder="0.00" oninput="prevMov()">
+          </div>
+          <div class="field">
+            <label>Referencia</label>
+            <input id="m-ref" type="text" placeholder="OC-001, GR-005...">
+          </div>
+        </div>
+
+        <!-- Preview del resultado -->
+        <div class="prev-box" id="pmov">
+          <div class="prev-item">
+            <div class="prev-lbl" id="pm-sl">Nuevo Stock</div>
+            <div class="prev-val" id="pm-s">0</div>
+          </div>
+          <div class="prev-sep"></div>
+          <div class="prev-item">
+            <div class="prev-lbl" id="pm-pl">Costo Promedio</div>
+            <div class="prev-val" id="pm-p">S/. 0.00</div>
+          </div>
+          <div class="prev-sep"></div>
+          <div class="prev-item">
+            <div class="prev-lbl" id="pm-tl">Nuevo Costo Total</div>
+            <div class="prev-val" id="pm-t">S/. 0.00</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-s" id="btn-mov" onclick="regMov()">📥 Registrar Ingreso</button>
+          <button class="btn btn-g" onclick="limpMov()">Limpiar</button>
+        </div>
+      </div>
+
+    </div><!-- /tab-movimientos -->
+
+    <!-- ══ HISTORIAL ══ -->
+    <div id="tab-historial" class="panel">
+
+      <div class="pg-header">
+        <div>
+          <div class="pg-title">Historial</div>
+          <div class="pg-desc">Registro completo de operaciones</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="filters">
+          <span class="f-lbl">Filtrar:</span>
+          <select id="f-prod" onchange="renderHist()" style="width: 220px">
+            <option value="">Todos los productos</option>
+          </select>
+          <select id="f-tipo" onchange="renderHist()" style="width: 150px">
+            <option value="">Todo tipo</option>
+            <option value="ingreso">Ingresos</option>
+            <option value="salida">Salidas</option>
+          </select>
+          <button class="btn btn-g btn-sm" onclick="exportCSV()">⬇ CSV</button>
+        </div>
+        <div id="hist-wrap">
+          <div class="empty">
+            <div class="empty-ico">📋</div>
+            <div class="empty-title">Sin movimientos</div>
+            <div class="empty-sub">Aparecerán aquí cuando registres operaciones</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /tab-historial -->
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Contenedor de toasts -->
+<div id="tc"></div>
+
+<!-- Script principal -->
+<script src="app.js"></script>
+
+</body>
+</html>
