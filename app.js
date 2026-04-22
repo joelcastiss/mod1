@@ -39,6 +39,7 @@ const TITLES = {
   dashboard:   ['Dashboard',    'Resumen general del almacén'],
   productos:   ['Productos',    'Gestionar catálogo de productos'],
   movimientos: ['Movimientos',  'Registrar ingreso o salida'],
+  consulta:    ['Consulta',     'Verificar stock y valorización'], // <-- NUEVA LÍNEA
   historial:   ['Historial',    'Registro completo de operaciones'],
 };
 
@@ -53,6 +54,7 @@ function goTab(name, btn) {
   document.getElementById('tb-sub').textContent   = s;
 
   if (name === 'movimientos') fillProdSel();
+  if (name === 'consulta')    renderConsulta(); // <-- NUEVA LÍNEA
   if (name === 'historial')   { fillFiltros(); renderHist(); }
   if (name === 'dashboard')   renderDash();
 }
@@ -71,6 +73,7 @@ function refresh() {
 
   renderCatalog();
   renderDash();
+  renderConsulta(); // <-- NUEVA LÍNEA
 }
 
 /* ═══════════════════════════════════════════════
