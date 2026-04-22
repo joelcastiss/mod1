@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Almacén - Registro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Sistema de Inventario</h1>
+            <p>Módulo de Registro de Productos</p>
+        </header>
+
+        <main class="grid">
+            <section class="card form-section">
+                <h2>Nuevo Producto</h2>
+                <form id="productForm">
+                    <div class="input-group">
+                        <label for="codigo">Código</label>
+                        <input type="text" id="codigo" placeholder="Ej: PROD-001" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="nombre">Nombre del Producto</label>
+                        <input type="text" id="nombre" placeholder="Ej: Laptop Gamer" required>
+                    </div>
+                    <div class="input-row">
+                        <div class="input-group">
+                            <label for="stock">Stock Inicial</label>
+                            <input type="number" id="stock" min="0" step="1" required>
+                        </div>
+                        <div class="input-group">
+                            <label for="costo">Costo Unitario (S/)</label>
+                            <input type="number" id="costo" min="0" step="0.01" required>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Registrar Producto</button>
+                </form>
+            </section>
+
+            <section class="summary-cards">
+                <div class="card mini-card">
+                    <h3>Total Ítems</h3>
+                    <p id="totalItems">0</p>
+                </div>
+                <div class="card mini-card">
+                    <h3>Valorización Total</h3>
+                    <p id="valorTotal">S/ 0.00</p>
+                </div>
+            </section>
+
+            <section class="card table-section">
+                <h2>Inventario Actual</h2>
+                <div class="table-wrapper">
+                    <table id="inventoryTable">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Stock</th>
+                                <th>Costo Unit.</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
